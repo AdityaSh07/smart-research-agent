@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ResearchWriter Agent</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div class="bg-glow bg-glow-1"></div>
+    <div class="bg-glow bg-glow-2"></div>
+    <main class="shell">
+      <section class="hero card">
+        <p class="kicker">LangGraph + FastAPI</p>
+        <h1>ResearchWriter Agent</h1>
+        <p class="subtext">
+          A topic-first autonomous pipeline for web research and long-form article creation.
+          It plans, gathers evidence, drafts sections, then merges into a publish-ready blog.
+        </p>
+        <div class="meta-row">
+          <span>Router Modes: closed_book / hybrid / open_book</span>
+          <span>Background: Tavily + Ollama + LangGraph workers</span>
+        </div>
+      </section>
+
+      <section class="composer card">
+        <form id="compose-form">
+          <label for="topic">Topic</label>
+          <textarea
+            id="topic"
+            name="topic"
+            required
+            placeholder="Example: How to build reliable multi-agent systems with LangGraph"
+          ></textarea>
+
+          <div class="controls">
+            <button id="generate-btn" type="submit">Generate Article</button>
+            <span id="status" aria-live="polite"></span>
+          </div>
+        </form>
+      </section>
+
+      <!-- Generation Status Section -->
+      <section id="generation-status" class="card" style="display: none;">
+        <h2>Generation Status</h2>
+        <div id="status-content">
+          <p>Generating article... This may take a few moments.</p>
+          <div id="generation-log" class="generation-log"></div>
+        </div>
+      </section>
+
+      <!-- Section Review Section -->
+      <section id="section-review" class="card" style="display: none;">
+        <div class="output-head">
+          <h2>Review & Edit Sections</h2>
+          <p id="plan-title"></p>
+        </div>
+        <div style="background: #f9fafb; border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-bottom: 16px; font-size: 0.9rem; color: #394252;">
+          <strong>Instructions:</strong> Review each section below. Use the <strong>[EDITED]</strong> badge to see which sections you've modified. Edit any section by clicking its "Edit Section" button. Then click "Generate Final Article" to compile your approved sections into the final blog post.
+        </div>
+        <div id="sections-container" class="sections-container"></div>
+        <div class="section-controls">
+          <button id="submit-review-btn" type="button">Generate Final Article</button>
+          <span id="review-status" aria-live="polite"></span>
+        </div>
+      </section>
+
+      <!-- Final Article Section -->
+      <section class="output card">
+        <div class="output-head">
+          <h2>Generated Article</h2>
+          <p id="result-meta">No content generated yet.</p>
+        </div>
+        <pre id="result">Write a topic and click Generate Article.</pre>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>

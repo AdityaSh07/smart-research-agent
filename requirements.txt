@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+jinja2
+pydantic
+python-dotenv
+langgraph
+langchain-core
+langchain-ollama
+langchain-tavily
