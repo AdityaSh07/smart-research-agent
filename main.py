@@ -101,7 +101,7 @@ def generate(payload: GenerateRequest):
         out, config = run_generation(payload.topic.strip(), payload.as_of)
         session_id = str(uuid4())
         
-        # Extract sections from state for review
+        # Extract sections for review
         sections = {}
         if isinstance(out, dict) and "sections" in out:
             for item in out["sections"]:
@@ -174,7 +174,7 @@ def submit_review(session_id: str = Query(...), feedback: ReviewFeedback = None)
         print(f"  - Total edits: {edited_count}")
         
         # Resume workflow with user feedback
-        # The review_node will receive this and process accordingly
+        
         final_out = research_agent.app.invoke(
             Command(resume={
                 "approved_ids": feedback.approved_ids,

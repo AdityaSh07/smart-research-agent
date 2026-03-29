@@ -176,6 +176,9 @@ button[disabled] {
   font-family: "IBM Plex Mono", monospace;
   font-size: 0.86rem;
   line-height: 1.5;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: pre-wrap;
 }
 
 @media (max-width: 700px) {

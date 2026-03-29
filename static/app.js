@@ -291,6 +291,7 @@ submitReviewBtn.addEventListener("click", async (e) => {
     // Reset state for new generation
     button.disabled = false;
     button.textContent = "Generate Another Article";
+    topicInput.value = "";
     currentSessionId = null;
     sectionStates = {};
     submitReviewBtn.disabled = false;
@@ -313,14 +314,12 @@ form.addEventListener("submit", async (event) => {
     return;
   }
 
-  // Reset state for new generation
+  // Reset form state completely for new generation
+  resetForm();
   button.disabled = true;
   button.textContent = "Generate Article";
   statusEl.textContent = "Starting generation...";
-  currentSessionId = null;
-  sectionStates = {};
   submitReviewBtn.disabled = false;
-  reviewStatusEl.textContent = "";
 
   showGenerationStatus();
 
