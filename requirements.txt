@@ -5,5 +5,5 @@ pydantic
 python-dotenv
 langgraph
 langchain-core
-langchain-ollama
+langchain-groq
 langchain-tavily
