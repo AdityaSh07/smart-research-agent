@@ -11,6 +11,7 @@ import os
 import requests
 from langgraph.types import Send, interrupt, Command
 from agent.utils import _tavily_search, _iso_to_date
+import base64
 
 
 
@@ -77,8 +78,7 @@ def research_node(state: State) -> dict:
             dedup[e.url] = e
     evidence = list(dedup.values())
 
-    # HARD RECENCY FILTER for open_book weekly roundup
-    # keep only items with a parseable ISO date and within the window.
+
     mode = state.get("mode", "closed_book")
     if mode == "open_book":
         as_of = date.fromisoformat(state["as_of"])
@@ -103,7 +103,6 @@ def orchestrator_node(state: State) -> dict:
     evidence = state.get("evidence", [])
     mode = state.get("mode", "closed_book")
 
-    # Force blog_kind for open_book
     forced_kind = "news_roundup" if mode == "open_book" else None
 
     plan = planner.invoke(
@@ -123,7 +122,7 @@ def orchestrator_node(state: State) -> dict:
         ]
     )
 
-    # Ensure open_book forces the kind even if model forgets
+
     if forced_kind:
         plan.blog_kind = "news_roundup"
 
@@ -221,7 +220,7 @@ def review_node(state: State) -> dict:
     sections_dict = {task_id: md for task_id, md in state["sections"]}
     sorted_ids = sorted(sections_dict.keys())
     
-    # Format sections for review
+
     review_text = "\n" + "=" * 100 + "\n"
     review_text += "SECTION REVIEW - Approve or Edit Before Finalizing\n"
     review_text += "=" * 100 + "\n\n"
@@ -255,14 +254,14 @@ def review_node(state: State) -> dict:
     # Interrupt to get user feedback
     user_feedback = interrupt(review_text)
     
-    # Process user feedback
+
     approved_ids = user_feedback.get("approved_ids", [])
     edits = user_feedback.get("edits", {})
     
-    # Sections with edits are automatically approved
+
     final_approved_ids = set(approved_ids) | set(edits.keys())
     
-    # Build approved sections with edits applied
+    
     approved_sections = []
     for task_id in sorted_ids:
         if task_id in final_approved_ids:
@@ -319,7 +318,6 @@ def decide_images(state: State) -> dict:
 
 def _generate_image_bytes(prompt: str) -> bytes:
     
-    import base64
     
     api_key = os.environ.get("NVIDIA_API_KEY")
     if not api_key:
@@ -365,7 +363,7 @@ def generate_and_place_images(state: State) -> dict:
     md = state.get("md_with_placeholders") or state["merged_md"]
     image_specs = state.get("image_specs", []) or []
 
-    # If no images requested, just write merged markdown
+    
     if not image_specs:
         filename = f"{plan.blog_title}.md"
         Path(filename).write_text(md, encoding="utf-8")
@@ -385,7 +383,7 @@ def generate_and_place_images(state: State) -> dict:
                 img_bytes = _generate_image_bytes(spec["prompt"])
                 out_path.write_bytes(img_bytes)
             except Exception as e:
-                # graceful fallback: keep doc usable
+                
                 prompt_block = (
                     f"> **[IMAGE GENERATION FAILED]** {spec.get('caption','')}\n>\n"
                     f"> **Alt:** {spec.get('alt','')}\n>\n"

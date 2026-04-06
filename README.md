@@ -2,22 +2,46 @@
 
 An end-to-end **agentic AI pipeline** built using **LangGraph + FastAPI**, designed to transform a simple topic into a structured, high-quality blog post through **multi-agent orchestration, real-time research, human-in-the-loop validation and image generation**.
 
-> ⚡ Not a single LLM call — a full pipeline with planning, parallel execution, review, synthesis, and **dynamic AI image generation**.
+> A full pipeline with planning, parallel execution, review, synthesis, and **dynamic AI image generation**.
 
 ---
 
-## 📸 Demo & Workflow
+## Architecture & Workflow
 
-### 🧠 Agent Architecture
+The system is implemented as a **LangGraph DAG-based agent pipeline**:
+
+1. **Router**
+   - Determines if web research is required
+
+2. **Research Node**
+   - Fetches external knowledge using Tavily
+
+3. **Orchestrator**
+   - Plans blog structure and sections
+
+4. **Each Section Creator (Worker) Nodes (Parallel Execution)**
+   - Generates each section independently
+
+5. **Review Node (HITL)**
+   - Pauses execution for user validation/editing
+
+6. **Reducer Node with Image Generation**
+   - Merges approved sections, decides optimal image placements, generates **context-aware images**, and produces the final polished output
+
+---
+
+## Demo & Workflow
+
+### Agent Architecture
 <p align="center">
-  <img src="assets/agent.png" width="700" height="auto" style="max-height: 400px; object-fit: contain;"/>
+  <img src="assets/agent.png" width="400" height="auto" style="max-height: 200px; object-fit: contain;"/>
 </p>
 
 > Multi-stage pipeline with routing, research, orchestration, parallel generation, and reduction with image generation.
 
 ---
 
-### ✍️ Topic Input & Generation
+### Topic Input & Generation
 <p align="center">
   <img src="assets/research_ui.png" width="700"/>
 </p>
@@ -26,16 +50,16 @@ An end-to-end **agentic AI pipeline** built using **LangGraph + FastAPI**, desig
 
 ---
 
-### 🧩 Section-wise Generation & Editing (Human-in-the-loop)
+### Section-wise Generation & Editing (Human-in-the-loop)
 <p align="center">
   <img src="assets/edit_section.png" width="700"/>
 </p>
 
-> Each section is independently generated and can be reviewed, edited, or regenerated before finalization.
+> Each section is independently generated and can be reviewed and edited before finalization.
 
 ---
 
-### ⚙️ Editing Controls
+### Editing Controls
 <p align="center">
   <img src="assets/edit_controls.png" width="700"/>
 </p>
@@ -44,7 +68,7 @@ An end-to-end **agentic AI pipeline** built using **LangGraph + FastAPI**, desig
 
 ---
 
-### 📄 Final Compiled Article
+### Final Compiled Article
 <p align="center">
   <img src="assets/final_output.png" width="700"/>
 </p>
@@ -53,7 +77,7 @@ An end-to-end **agentic AI pipeline** built using **LangGraph + FastAPI**, desig
 
 ---
 
-## 🔥 Key Features
+## Key Features
 
 - **Agentic Multi-Step Pipeline**
   - Router → Research → Orchestrator → Parallel Writers → Review → Reducer
@@ -68,7 +92,7 @@ An end-to-end **agentic AI pipeline** built using **LangGraph + FastAPI**, desig
 - **Live Web Research**
   - Uses Tavily to fetch real-time, relevant context
 
-- **🎨 Dynamic AI Image Generation & Placement**
+- **Dynamic AI Image Generation & Placement**
   - Unlike standard text generators, this pipeline **automatically plans, prompts, and generates** highly context-aware images to accompany specific sections of the blog.
   - Dynamically decides *where* an image brings the most value and *what* the visual should represent, seamlessly weaving the generated assets into the final Markdown output.
 
@@ -82,31 +106,7 @@ An end-to-end **agentic AI pipeline** built using **LangGraph + FastAPI**, desig
 
 ---
 
-## 🏗️ Architecture & Workflow
-
-The system is implemented as a **LangGraph DAG-based agent pipeline**:
-
-1. **Router**
-   - Determines if web research is required
-
-2. **Research Node**
-   - Fetches external knowledge using Tavily
-
-3. **Orchestrator**
-   - Plans blog structure and sections
-
-4. **Worker Nodes (Parallel Execution)**
-   - Generates each section independently
-
-5. **Review Node (HITL)**
-   - Pauses execution for user validation/editing
-
-6. **Reducer Node with Image Generation**
-   - Merges approved sections, decides optimal image placements, generates **context-aware images**, and produces the final polished output
-
----
-
-## ⚙️ Tech Stack
+## Tech Stack
 
 - **Agent Framework**: LangGraph, LangChain  
 - **Backend**: FastAPI, Uvicorn  
@@ -118,7 +118,7 @@ The system is implemented as a **LangGraph DAG-based agent pipeline**:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 

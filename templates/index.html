@@ -11,6 +11,8 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/static/style.css" />
+    <!-- Markdown to HTML -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   </head>
   <body>
     <div class="bg-glow bg-glow-1"></div>
@@ -76,8 +78,9 @@
         <div class="output-head">
           <h2>Generated Article</h2>
           <p id="result-meta">No content generated yet.</p>
+          <button id="download-md-btn" type="button" style="display: none; margin-left: auto;">Download Markdown</button>
         </div>
-        <pre id="result">Write a topic and click Generate Article.</pre>
+        <div id="result" class="markdown-body" style="padding: 20px; background: #ffffff; color: #111827; border-radius: 8px; border: 1px solid var(--line); overflow-x: auto;">Write a topic and click Generate Article.</div>
       </section>
     </main>
 

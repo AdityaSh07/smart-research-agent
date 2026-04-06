@@ -12,18 +12,34 @@ const sectionsContainer = document.getElementById("sections-container");
 const planTitleEl = document.getElementById("plan-title");
 const submitReviewBtn = document.getElementById("submit-review-btn");
 const reviewStatusEl = document.getElementById("review-status");
+const downloadMdBtn = document.getElementById("download-md-btn");
 
 let currentSessionId = null;
 let sectionStates = {}; // Track {original, current, isEditing} for each section
+let currentFinalMd = "";
+let currentFinalFilename = "";
+
+// Handle download button click (Markdown)
+downloadMdBtn.addEventListener("click", () => {
+  if (!currentFinalMd) return;
+  const blob = new Blob([currentFinalMd], { type: 'text/markdown' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = currentFinalFilename || 'article.md';
+  a.click();
+  URL.revokeObjectURL(url);
+});
 
 // Reset form and state for new generation
 function resetForm() {
   topicInput.value = "";
   statusEl.textContent = "";
-  resultEl.textContent = "Write a topic and click Generate Article.";
+  resultEl.innerHTML = "Write a topic and click Generate Article.";
   resultMetaEl.textContent = "No content generated yet.";
   generationStatusSection.style.display = "none";
   sectionReviewSection.style.display = "none";
+  downloadMdBtn.style.display = "none";
   generationLog.innerHTML = "";
   currentSessionId = null;
   sectionStates = {};
@@ -283,10 +299,31 @@ submitReviewBtn.addEventListener("click", async (e) => {
     // Show final article
     sectionReviewSection.style.display = "none";
     generationStatusSection.style.display = "none";
-    resultEl.textContent = data.final_md;
-    resultMetaEl.textContent = `Saved as: ${data.saved_file}`;
-    reviewStatusEl.textContent = "Article generated successfully!";
-    statusEl.textContent = "Article generated successfully! You can generate a new article or modify the current one.";
+    
+    // Render markdown to HTML to display and enable PDF conversion
+    if (typeof marked !== 'undefined') {
+      resultEl.innerHTML = marked.parse(data.final_md);
+      // Ensure images scale nicely inside the div
+      const imgs = resultEl.querySelectorAll('img');
+      imgs.forEach(img => {
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+        img.style.borderRadius = "8px";
+        img.style.marginTop = "16px";
+        img.style.marginBottom = "16px";
+      });
+    } else {
+      resultEl.textContent = data.final_md;
+    }
+
+    resultMetaEl.textContent = `Saved locally as: ${data.saved_file}`;
+    reviewStatusEl.textContent = "Article ready to download!";
+    statusEl.textContent = "Article ready to download! You can generate a new article or modify the current one.";
+    
+    // Make it downloadable
+    currentFinalMd = data.final_md;
+    currentFinalFilename = data.saved_file;
+    downloadMdBtn.style.display = "inline-block";
     
     // Reset state for new generation
     button.disabled = false;

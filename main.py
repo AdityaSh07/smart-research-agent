@@ -43,6 +43,11 @@ app = FastAPI(
 
 BASE_DIR = Path(__file__).resolve().parent
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+
+images_path = BASE_DIR / "images"
+images_path.mkdir(exist_ok=True) # to show img in md
+app.mount("/images", StaticFiles(directory=images_path), name="images")
+
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
