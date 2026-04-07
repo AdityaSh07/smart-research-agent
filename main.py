@@ -72,7 +72,6 @@ def run_generation(topic: str, as_of: str | None) -> dict:
         "final": "",
     }
 
-    # Initial invocation - runs until interrupt (for section review)
     out = None
     try:
         out = research_agent.app.invoke(state, config=config)
@@ -91,7 +90,7 @@ def run_generation(topic: str, as_of: str | None) -> dict:
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    return templates.TemplateResponse(request=request, name="index.html")
 
 
 @app.get("/api/health")
