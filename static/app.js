@@ -14,6 +14,9 @@ const submitReviewBtn = document.getElementById("submit-review-btn");
 const reviewStatusEl = document.getElementById("review-status");
 const downloadMdBtn = document.getElementById("download-md-btn");
 
+let generationCount = 0;
+const MAX_GENERATIONS = 2;
+
 let currentSessionId = null;
 let sectionStates = {}; // Track {original, current, isEditing} for each section
 let currentFinalMd = "";
@@ -326,8 +329,15 @@ submitReviewBtn.addEventListener("click", async (e) => {
     downloadMdBtn.style.display = "inline-block";
     
     // Reset state for new generation
-    button.disabled = false;
-    button.textContent = "Generate Another Article";
+    if (generationCount >= MAX_GENERATIONS) {
+      button.disabled = true;
+      button.textContent = "Limit Reached (2/2)";
+      button.style.background = "linear-gradient(135deg, #9ca3af, #6b7280)";
+      button.style.cursor = "not-allowed";
+    } else {
+      button.disabled = false;
+      button.textContent = "Generate Another Article";
+    }
     topicInput.value = "";
     currentSessionId = null;
     sectionStates = {};
@@ -345,11 +355,22 @@ submitReviewBtn.addEventListener("click", async (e) => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
+  if (generationCount >= MAX_GENERATIONS) {
+    statusEl.textContent = "Maximum generation limit (2) reached for this student demo.";
+    button.disabled = true;
+    button.textContent = "Limit Reached (2/2)";
+    button.style.background = "linear-gradient(135deg, #9ca3af, #6b7280)";
+    button.style.cursor = "not-allowed";
+    return;
+  }
+
   const topic = topicInput.value.trim();
   if (!topic) {
     statusEl.textContent = "Please add a topic first.";
     return;
   }
+
+  generationCount++;
 
   // Reset form state completely for new generation
   resetForm();
